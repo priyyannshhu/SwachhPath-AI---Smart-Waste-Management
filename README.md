@@ -58,7 +58,7 @@ npx wrangler dev
 - Fork and open a PR with focused, tested changes
 
 ## Maintainers & Contact
-- Maintainer: Pooja Jaiswal
+- Maintainer: Priyanshu Vishwakarma
 - Project: SwachhPath AI — Smart Waste Management
 
 ## License
