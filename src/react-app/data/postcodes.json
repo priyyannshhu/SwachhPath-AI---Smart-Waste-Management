@@ -1,0 +1,41 @@
+{
+  "postcodes": [
+    {
+      "pin": "273001",
+      "area": "Golghar",
+      "dustbins": [
+        { "id": "GB01", "location": "Golghar Main Chowk", "fillLevel": 70 },
+        { "id": "GB02", "location": "Bank Road", "fillLevel": 30 }
+      ]
+    },
+    {
+      "pin": "273002",
+      "area": "Basharatpur",
+      "dustbins": [
+        { "id": "BP01", "location": "Basharatpur Market", "fillLevel": 85 },
+        { "id": "BP02", "location": "Medical College Road", "fillLevel": 50 }
+      ]
+    },
+    {
+      "pin": "273003",
+      "area": "Taramandal",
+      "dustbins": [
+        { "id": "TR01", "location": "Taramandal Crossing", "fillLevel": 90 }
+      ]
+    },
+    {
+      "pin": "273004",
+      "area": "Rustampur",
+      "dustbins": [
+        { "id": "RS01", "location": "Rustampur Park", "fillLevel": 40 }
+      ]
+    },
+    {
+      "pin": "273005",
+      "area": "Padri Bazar",
+      "dustbins": [
+        { "id": "PB01", "location": "Padri Bazar Main", "fillLevel": 95 }
+      ]
+    }
+  ]
+}

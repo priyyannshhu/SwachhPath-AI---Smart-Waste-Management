@@ -1,0 +1,12 @@
+{
+  "complaints": [
+    {
+      "id": 1,
+      "user": "Priyanshu",
+      "pin": "273002",
+      "area": "Basharatpur",
+      "issue": "Dustbin overflowing near market",
+      "status": "Pending"
+    }
+  ]
+}

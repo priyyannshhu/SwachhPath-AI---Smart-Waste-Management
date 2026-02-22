@@ -1,0 +1,19 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Priyanshu",
+      "email": "user@gorakhpur.com",
+      "password": "123456",
+      "role": "user",
+      "pin": "273002"
+    },
+    {
+      "id": 2,
+      "name": "Admin",
+      "email": "admin@swachhpath.com",
+      "password": "admin123",
+      "role": "admin"
+    }
+  ]
+}
