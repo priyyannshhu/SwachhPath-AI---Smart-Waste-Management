@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import {
   LayoutDashboard,
   MapPin,
+  Map,
   Trash2,
   MessageSquareWarning,
   LogOut,
@@ -16,6 +17,7 @@ import { cn } from "@/react-app/lib/utils";
 
 const adminNavItems = [
   { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { path: "/map", label: "Live Map", icon: Map },
   { path: "/localities", label: "Localities", icon: MapPin },
   { path: "/dustbins", label: "Dustbins", icon: Trash2 },
   { path: "/complaints", label: "Complaints", icon: MessageSquareWarning },
@@ -23,6 +25,7 @@ const adminNavItems = [
 
 const userNavItems = [
   { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { path: "/map", label: "Live Map", icon: Map },
   { path: "/dustbins", label: "My Area Dustbins", icon: Trash2 },
   { path: "/complaints", label: "Complaints", icon: MessageSquareWarning },
 ];

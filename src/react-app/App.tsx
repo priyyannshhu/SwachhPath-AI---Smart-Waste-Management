@@ -6,6 +6,7 @@ import DashboardPage from "@/react-app/pages/Dashboard";
 import LocalitiesPage from "@/react-app/pages/Localities";
 import DustbinsPage from "@/react-app/pages/Dustbins";
 import ComplaintsPage from "@/react-app/pages/Complaints";
+import MapPage from "@/react-app/pages/Map";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
             <Route path="/localities" element={<LocalitiesPage />} />
             <Route path="/dustbins" element={<DustbinsPage />} />
             <Route path="/complaints" element={<ComplaintsPage />} />
+            <Route path="/map" element={<MapPage />} />
           </Routes>
         </Router>
       </DataProvider>
