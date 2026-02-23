@@ -28,7 +28,7 @@ export default function ComplaintsPage() {
   // Filter complaints for regular users
   const filteredComplaints = useMemo(() => {
     if (user?.role === "admin") return complaints;
-    return complaints.filter((c) => c.pin === user?.pin);
+    return complaints.filter((c) => (c.pin === user?.pin) || (c.createdBy === user?.id));
   }, [complaints, user]);
 
   // Get user's area info
@@ -51,7 +51,7 @@ export default function ComplaintsPage() {
       pin: user.pin || "",
       area: userArea?.area || "",
       issue: formData.issue,
-      status: "Pending",
+      status: "pending",
     });
 
     setFormData({ issue: "" });
@@ -64,25 +64,27 @@ export default function ComplaintsPage() {
   };
 
   const getStatusIcon = (status: Complaint["status"]) => {
-    switch (status) {
-      case "Pending":
-        return <Clock className="w-4 h-4" />;
-      case "In Progress":
-        return <Loader2 className="w-4 h-4 animate-spin" />;
-      case "Resolved":
-        return <CheckCircle2 className="w-4 h-4" />;
+    const normalizedStatus = String(status).toLowerCase();
+    if (normalizedStatus === "pending") {
+      return <Clock className="w-4 h-4" />;
+    } else if (normalizedStatus === "in_progress" || normalizedStatus === "in progress") {
+      return <Loader2 className="w-4 h-4 animate-spin" />;
+    } else if (normalizedStatus === "resolved") {
+      return <CheckCircle2 className="w-4 h-4" />;
     }
+    return <Clock className="w-4 h-4" />;
   };
 
   const getStatusStyle = (status: Complaint["status"]) => {
-    switch (status) {
-      case "Pending":
-        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
-      case "In Progress":
-        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
-      case "Resolved":
-        return "bg-green-500/20 text-green-400 border-green-500/30";
+    const normalizedStatus = String(status).toLowerCase();
+    if (normalizedStatus === "pending") {
+      return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+    } else if (normalizedStatus === "in_progress" || normalizedStatus === "in progress") {
+      return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+    } else if (normalizedStatus === "resolved") {
+      return "bg-green-500/20 text-green-400 border-green-500/30";
     }
+    return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
   };
 
   return (
@@ -131,7 +133,7 @@ export default function ComplaintsPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-foreground">
-                  {filteredComplaints.filter((c) => c.status === "Pending").length}
+                  {filteredComplaints.filter((c) => String(c.status).toLowerCase() === "pending").length}
                 </p>
                 <p className="text-xs text-muted-foreground">Pending</p>
               </div>
@@ -144,7 +146,7 @@ export default function ComplaintsPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-foreground">
-                  {filteredComplaints.filter((c) => c.status === "Resolved").length}
+                  {filteredComplaints.filter((c) => String(c.status).toLowerCase() === "resolved").length}
                 </p>
                 <p className="text-xs text-muted-foreground">Resolved</p>
               </div>
@@ -270,14 +272,14 @@ export default function ComplaintsPage() {
                       {complaint.status}
                     </span>
 
-                    {user?.role === "admin" && complaint.status !== "Resolved" && (
+                    {user?.role === "admin" && complaint.status !== "resolved" && (
                       <div className="flex gap-2">
-                        {complaint.status === "Pending" && (
+                        {String(complaint.status).toLowerCase() === "pending" && (
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() =>
-                              handleStatusUpdate(complaint.id, "In Progress")
+                              handleStatusUpdate(complaint.id, "in_progress")
                             }
                             className="text-xs h-8"
                           >
@@ -287,7 +289,7 @@ export default function ComplaintsPage() {
                         <Button
                           size="sm"
                           onClick={() =>
-                            handleStatusUpdate(complaint.id, "Resolved")
+                            handleStatusUpdate(complaint.id, "resolved")
                           }
                           className="text-xs h-8 bg-green-600 hover:bg-green-700"
                         >

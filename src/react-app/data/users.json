@@ -1,19 +1,34 @@
 {
   "users": [
     {
-      "id": 1,
-      "name": "Priyanshu",
+      "id": "user_001",
+      "name": "Priyanshu Kumar",
       "email": "user@gorakhpur.com",
       "password": "123456",
-      "role": "user",
-      "pin": "273002"
+      "role": "citizen",
+      "locality": "Gorakhpur Zone A",
+      "phone": "+91-9876543210",
+      "createdAt": "2026-02-01T10:00:00Z"
     },
     {
-      "id": 2,
-      "name": "Admin",
+      "id": "user_002",
+      "name": "Amit Singh",
+      "email": "amit@gorakhpur.com",
+      "password": "demo123",
+      "role": "citizen",
+      "locality": "Gorakhpur Zone B",
+      "phone": "+91-9876543211",
+      "createdAt": "2026-02-02T11:30:00Z"
+    },
+    {
+      "id": "admin_001",
+      "name": "Municipality Admin",
       "email": "admin@swachhpath.com",
       "password": "admin123",
-      "role": "admin"
+      "role": "admin",
+      "locality": "Head Office",
+      "phone": "+91-9876543212",
+      "createdAt": "2026-01-01T08:00:00Z"
     }
   ]
 }

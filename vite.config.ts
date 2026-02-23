@@ -12,6 +12,13 @@ export default defineConfig({
 	  ],
 	  server: {
 	    allowedHosts: true,
+	    proxy: {
+	      "/api": {
+	        target: "http://localhost:8787",
+	        changeOrigin: true,
+	        rewrite: (path) => path.replace(/^\/api/, "/api"),
+	      },
+	    },
 	  },
   build: {
     chunkSizeWarningLimit: 5000,

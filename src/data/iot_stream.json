@@ -1,0 +1,12 @@
+{
+  "devices": [
+    { "deviceId": "GB01", "lat": 26.7606, "lng": 83.3732, "fillLevel": 70, "battery": 92, "status": "online" },
+    { "deviceId": "GB02", "lat": 26.7612, "lng": 83.3740, "fillLevel": 30, "battery": 88, "status": "online" },
+    { "deviceId": "BP01", "lat": 26.7580, "lng": 83.3680, "fillLevel": 85, "battery": 75, "status": "online" },
+    { "deviceId": "BP02", "lat": 26.7590, "lng": 83.3700, "fillLevel": 50, "battery": 82, "status": "online" },
+    { "deviceId": "TR01", "lat": 26.7620, "lng": 83.3760, "fillLevel": 90, "battery": 68, "status": "online" },
+    { "deviceId": "RS01", "lat": 26.7550, "lng": 83.3650, "fillLevel": 40, "battery": 95, "status": "online" },
+    { "deviceId": "PB01", "lat": 26.7570, "lng": 83.3710, "fillLevel": 95, "battery": 72, "status": "online" }
+  ],
+  "updatedAt": ""
+}

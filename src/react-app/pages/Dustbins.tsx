@@ -1,24 +1,25 @@
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useAuth } from "@/react-app/context/AuthContext";
 import { useData } from "@/react-app/context/DataContext";
 import { getFillStatus } from "@/react-app/types";
 import DashboardLayout from "@/react-app/components/layout/DashboardLayout";
 import DustbinCard from "@/react-app/components/cards/DustbinCard";
-import { Trash2, Filter, Zap } from "lucide-react";
+import { Trash2, Filter, Zap, Wifi } from "lucide-react";
 import { Button } from "@/react-app/components/ui/button";
 import { cn } from "@/react-app/lib/utils";
+import type { IoTMode } from "@/services/iotService";
 
 type FilterType = "all" | "low" | "medium" | "high";
 
 export default function DustbinsPage() {
   const { user } = useAuth();
-  const { postcodes, markDustbinEmptied, updateDustbinLevel } = useData();
+  const { postcodes, markDustbinEmptied, iotMode, setIotMode } = useData();
   const [filter, setFilter] = useState<FilterType>("all");
-  const [iotEnabled, setIotEnabled] = useState(false);
+  const iotEnabled = iotMode === "demo" || iotMode === "live";
 
   // Filter postcodes for regular users
   const filteredPostcodes = useMemo(() => {
-    if (user?.role === "admin") return postcodes;
+    if (user?.role === "admin" || !user?.pin) return postcodes;
     return postcodes.filter((p) => p.pin === user?.pin);
   }, [postcodes, user]);
 
@@ -34,24 +35,6 @@ export default function DustbinsPage() {
     if (filter === "all") return allDustbins;
     return allDustbins.filter((d) => getFillStatus(d.fillLevel) === filter);
   }, [allDustbins, filter]);
-
-  // IoT Simulation - auto-increment fill levels
-  useEffect(() => {
-    if (!iotEnabled) return;
-
-    const interval = setInterval(() => {
-      postcodes.forEach((postcode) => {
-        postcode.dustbins.forEach((bin) => {
-          if (bin.fillLevel < 100) {
-            const increment = Math.floor(Math.random() * 3) + 3; // 3-5% increment
-            updateDustbinLevel(postcode.pin, bin.id, bin.fillLevel + increment);
-          }
-        });
-      });
-    }, 5000); // Every 5 seconds
-
-    return () => clearInterval(interval);
-  }, [iotEnabled, postcodes, updateDustbinLevel]);
 
   const filterOptions: { value: FilterType; label: string; color: string }[] = [
     { value: "all", label: "All Bins", color: "bg-muted" },
@@ -74,34 +57,59 @@ export default function DustbinsPage() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">
-              {user?.role === "admin" ? "All Dustbins" : "My Area Dustbins"}
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              {user?.role === "admin"
-                ? "Manage and monitor all dustbins across Gorakhpur"
-                : `Monitoring dustbins in ${filteredPostcodes[0]?.area || "your area"}`}
-            </p>
-          </div>
+        {/* Command Center style header */}
+        <div className="command-panel p-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                <h1 className="text-xl font-bold text-foreground uppercase tracking-wider font-mono">
+                  {user?.role === "admin" ? "All Dustbins" : "My Area Dustbins"}
+                </h1>
+              </div>
+              <p className="text-xs text-muted-foreground font-mono mt-2 ml-5">
+                {user?.role === "admin"
+                  ? "Manage and monitor all dustbins across Gorakhpur"
+                  : `Monitoring dustbins in ${filteredPostcodes[0]?.area || "your area"}`}
+              </p>
+            </div>
           
-          {/* IoT Simulation Toggle */}
+          {/* IoT Mode: Off | Demo (simulated) | Live (ESP32-ready) */}
           {user?.role === "admin" && (
-            <Button
-              onClick={() => setIotEnabled(!iotEnabled)}
-              className={cn(
-                "gap-2 transition-all duration-300",
-                iotEnabled
-                  ? "bg-primary hover:bg-primary/90 neon-glow-sm"
-                  : "bg-muted hover:bg-muted/80 text-muted-foreground"
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">IoT:</span>
+              <div className="flex rounded-lg border border-border bg-muted/30 p-0.5">
+                {(
+                  [
+                    { mode: "off" as IoTMode, label: "Off", icon: null },
+                    { mode: "demo" as IoTMode, label: "Demo", icon: Zap },
+                    { mode: "live" as IoTMode, label: "Live", icon: Wifi },
+                  ] as const
+                ).map(({ mode: m, label, icon: Icon }) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setIotMode(m)}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-all",
+                      iotMode === m
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    {Icon && <Icon className={cn("w-3.5 h-3.5", iotMode === m && "animate-pulse")} />}
+                    {label}
+                  </button>
+                ))}
+              </div>
+              {iotMode === "live" && (
+                <span className="text-[10px] text-muted-foreground max-w-[120px]">
+                  Ready for ESP32 / WebSocket / MQTT
+                </span>
               )}
-            >
-              <Zap className={cn("w-4 h-4", iotEnabled && "animate-pulse")} />
-              {iotEnabled ? "IoT Simulation ON" : "Start IoT Simulation"}
-            </Button>
+            </div>
           )}
+          </div>
         </div>
 
         {/* Stats Bar */}
@@ -134,32 +142,34 @@ export default function DustbinsPage() {
         </div>
 
         {/* Filter */}
-        <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">Filter:</span>
-          {filterOptions.map((option) => (
-            <button
-              key={option.value}
-              onClick={() => setFilter(option.value)}
-              className={cn(
-                "px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-300",
-                filter === option.value
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted/50 text-muted-foreground hover:bg-muted"
-              )}
-            >
-              <span className="flex items-center gap-1.5">
-                {option.value !== "all" && (
-                  <span className={cn("w-2 h-2 rounded-full", option.color)} />
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-2 overflow-x-auto">
+          <Filter className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+          <span className="text-sm text-muted-foreground whitespace-nowrap">Filter:</span>
+          <div className="flex items-center gap-2 flex-wrap">
+            {filterOptions.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => setFilter(option.value)}
+                className={cn(
+                  "px-2.5 sm:px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-300 whitespace-nowrap",
+                  filter === option.value
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted/50 text-muted-foreground hover:bg-muted"
                 )}
-                {option.label}
-              </span>
-            </button>
-          ))}
+              >
+                <span className="flex items-center gap-1.5">
+                  {option.value !== "all" && (
+                    <span className={cn("w-2 h-2 rounded-full", option.color)} />
+                  )}
+                  {option.label}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Dustbins Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
           {displayedDustbins.map((bin) => (
             <DustbinCard
               key={bin.id}
@@ -172,9 +182,9 @@ export default function DustbinsPage() {
         </div>
 
         {displayedDustbins.length === 0 && (
-          <div className="text-center py-12 glass rounded-2xl">
-            <Trash2 className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-            <p className="text-muted-foreground">
+          <div className="text-center py-8 sm:py-12 glass rounded-xl sm:rounded-2xl px-4">
+            <Trash2 className="w-10 h-10 sm:w-12 sm:h-12 mx-auto text-muted-foreground mb-3 sm:mb-4" />
+            <p className="text-sm sm:text-base text-muted-foreground">
               No dustbins found with the selected filter
             </p>
           </div>

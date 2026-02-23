@@ -2,11 +2,67 @@
   "complaints": [
     {
       "id": 1,
-      "user": "Priyanshu",
-      "pin": "273002",
-      "area": "Basharatpur",
-      "issue": "Dustbin overflowing near market",
-      "status": "Pending"
+      "title": "Dustbin overflowing near market",
+      "description": "The waste collection bin near the main market is overflowing for the past 2 days. Waste is scattered around creating hygiene issues.",
+      "createdBy": "user_001",
+      "createdByName": "Priyanshu Kumar",
+      "location": "Market Street, Gorakhpur Zone A",
+      "locality": "Gorakhpur Zone A",
+      "lat": 26.1633,
+      "lng": 83.3589,
+      "dustbinId": "DB_001",
+      "status": "pending",
+      "priority": "high",
+      "createdAt": "2026-02-12T14:30:00Z",
+      "updatedAt": "2026-02-12T14:30:00Z"
+    },
+    {
+      "id": 2,
+      "title": "Missing dustbin near school",
+      "description": "There should be a waste collection bin near the school entrance. Students are throwing waste on the street.",
+      "createdBy": "user_002",
+      "createdByName": "Amit Singh",
+      "location": "School Street, Gorakhpur Zone B",
+      "locality": "Gorakhpur Zone B",
+      "lat": 26.1720,
+      "lng": 83.3670,
+      "dustbinId": null,
+      "status": "pending",
+      "priority": "medium",
+      "createdAt": "2026-02-11T10:15:00Z",
+      "updatedAt": "2026-02-11T10:15:00Z"
+    },
+    {
+      "id": 3,
+      "title": "Park Road bin broken",
+      "description": "The dustbin lid is broken and won't close properly. Animals are getting into it.",
+      "createdBy": "user_001",
+      "createdByName": "Priyanshu Kumar",
+      "location": "Park Road, Gorakhpur Zone A",
+      "locality": "Gorakhpur Zone A",
+      "lat": 26.1650,
+      "lng": 83.3610,
+      "dustbinId": "DB_002",
+      "status": "in_progress",
+      "priority": "medium",
+      "createdAt": "2026-02-13T09:00:00Z",
+      "updatedAt": "2026-02-13T15:30:00Z"
+    },
+    {
+      "id": 4,
+      "title": "Unauthorized dumping at site",
+      "description": "Large construction waste being dumped illegally near the hospital road. Need immediate investigation.",
+      "createdBy": "admin_001",
+      "createdByName": "Municipality Admin",
+      "location": "Hospital Road, Gorakhpur Zone A",
+      "locality": "Gorakhpur Zone A",
+      "lat": 26.1680,
+      "lng": 83.3620,
+      "dustbinId": "DB_005",
+      "status": "resolved",
+      "priority": "critical",
+      "createdAt": "2026-02-10T08:00:00Z",
+      "updatedAt": "2026-02-14T11:00:00Z"
     }
   ]
 }

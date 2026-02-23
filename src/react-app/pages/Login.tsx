@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { Navigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 import { useAuth } from "@/react-app/context/AuthContext";
-import { Recycle, Mail, Lock, Loader2 } from "lucide-react";
+import { Recycle, Mail, Lock, Loader2, ArrowRight } from "lucide-react";
 import { Button } from "@/react-app/components/ui/button";
 import { Input } from "@/react-app/components/ui/input";
 
 export default function LoginPage() {
   const { user, login, isLoading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -35,6 +36,10 @@ export default function LoginPage() {
       setError("Invalid email or password");
     }
     setIsLoading(false);
+  };
+
+  const handleSignupRedirect = () => {
+    navigate("/signup");
   };
 
   return (
@@ -120,15 +125,36 @@ export default function LoginPage() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm neon-glow-sm"
+              className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-sm neon-glow-sm flex items-center justify-center gap-2"
             >
               {isLoading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Signing in...
+                </>
               ) : (
-                "Sign In"
+                <>
+                  Sign In
+                  <ArrowRight className="w-5 h-5" />
+                </>
               )}
             </Button>
           </form>
+
+          {/* Signup Link */}
+          <div className="pt-6 border-t border-border">
+            <p className="text-sm text-muted-foreground text-center mb-4">
+              New to SwachhPath?
+            </p>
+            <Button
+              type="button"
+              onClick={handleSignupRedirect}
+              variant="outline"
+              className="w-full h-11 rounded-xl border-border hover:bg-muted/50"
+            >
+              Create Account
+            </Button>
+          </div>
 
           {/* Demo Credentials */}
           <div className="mt-6 p-4 rounded-xl bg-muted/30 border border-border">
@@ -136,6 +162,7 @@ export default function LoginPage() {
             <div className="space-y-1 text-xs text-muted-foreground">
               <p><span className="text-primary">Admin:</span> admin@swachhpath.com / admin123</p>
               <p><span className="text-primary">User:</span> user@gorakhpur.com / 123456</p>
+              <p><span className="text-primary">User 2:</span> amit@gorakhpur.com / demo123</p>
             </div>
           </div>
         </div>
@@ -148,3 +175,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

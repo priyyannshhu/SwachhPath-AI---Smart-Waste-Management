@@ -7,6 +7,10 @@ SwachhPath AI is a responsive web dashboard and management tool designed to help
 - Fast HMR development with Vite
 - Recharts-powered visualizations for bin fill-levels and trends
 - GSAP animations and accessible UI primitives
+- **ESP32-ready IoT integration** with demo and live modes
+- **Live map tracking** with react-leaflet (colored markers, pulsing critical bins)
+- **AI-powered insights** via Google Gemini (actionable recommendations)
+- **Device status monitoring** (online/offline, battery levels)
 - Optional Cloudflare Workers integration for edge APIs
 
 ## Quick start
@@ -16,7 +20,17 @@ SwachhPath AI is a responsive web dashboard and management tool designed to help
 npm install
 ```
 
-2. Start the dev server
+2. (Optional) Set up Gemini AI for insights
+
+Create a `.env` file in the root directory:
+
+```bash
+VITE_GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+Get your API key from [Google AI Studio](https://makersuite.google.com/app/apikey).
+
+3. Start the dev server
 
 ```bash
 npm run dev

@@ -1,0 +1,56 @@
+{
+  "requests": [
+    {
+      "id": "REQ_001",
+      "requestedBy": "user_001",
+      "location": "Temple Road, Gorakhpur Zone A",
+      "locality": "Gorakhpur Zone A",
+      "lat": 26.1640,
+      "lng": 83.3600,
+      "reason": "High foot traffic area, no waste collection nearby",
+      "status": "pending",
+      "priority": "high",
+      "createdAt": "2026-02-10T10:30:00Z",
+      "updatedAt": "2026-02-10T10:30:00Z"
+    },
+    {
+      "id": "REQ_002",
+      "requestedBy": "user_002",
+      "location": "Bus Stand Area, Gorakhpur Zone B",
+      "locality": "Gorakhpur Zone B",
+      "lat": 26.1750,
+      "lng": 83.3700,
+      "reason": "Public transportation hub overcrowded with waste",
+      "status": "approved",
+      "priority": "critical",
+      "createdAt": "2026-02-08T14:00:00Z",
+      "updatedAt": "2026-02-12T09:15:00Z"
+    },
+    {
+      "id": "REQ_003",
+      "requestedBy": "user_001",
+      "location": "Residential Street, Zone A",
+      "locality": "Gorakhpur Zone A",
+      "lat": 26.1620,
+      "lng": 83.3580,
+      "reason": "Population increased, existing bin cannot handle volume",
+      "status": "in_progress",
+      "priority": "medium",
+      "createdAt": "2026-02-12T11:00:00Z",
+      "updatedAt": "2026-02-13T08:30:00Z"
+    },
+    {
+      "id": "REQ_004",
+      "requestedBy": "user_002",
+      "location": "Market Extension, Zone B",
+      "locality": "Gorakhpur Zone B",
+      "lat": 26.1770,
+      "lng": 83.3680,
+      "reason": "New shops opened, need additional waste management",
+      "status": "pending",
+      "priority": "medium",
+      "createdAt": "2026-02-14T09:00:00Z",
+      "updatedAt": "2026-02-14T09:00:00Z"
+    }
+  ]
+}

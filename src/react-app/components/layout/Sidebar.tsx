@@ -11,6 +11,10 @@ import {
   Recycle,
   Menu,
   X,
+  Map as MapIcon,
+  Plus,
+  AlertCircle,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/react-app/lib/utils";
 
@@ -18,13 +22,23 @@ const adminNavItems = [
   { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { path: "/localities", label: "Localities", icon: MapPin },
   { path: "/dustbins", label: "Dustbins", icon: Trash2 },
+  { path: "/map", label: "Live Map", icon: MapIcon },
   { path: "/complaints", label: "Complaints", icon: MessageSquareWarning },
+  { path: "/ai-assistant", label: "AI Assistant", icon: Sparkles },
 ];
 
 const userNavItems = [
   { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { path: "/dustbins", label: "My Area Dustbins", icon: Trash2 },
+  { path: "/map", label: "Live Map", icon: MapIcon },
   { path: "/complaints", label: "Complaints", icon: MessageSquareWarning },
+  { path: "/ai-assistant", label: "AI Assistant", icon: Sparkles },
+];
+
+const actionItems = [
+  { path: "/dustbins/add", label: "Add Dustbin", icon: Plus, color: "text-green-500" },
+  { path: "/complaints/file", label: "File Complaint", icon: AlertCircle, color: "text-red-500" },
+  { path: "/requests/dustbin", label: "Request Dustbin", icon: Plus, color: "text-blue-500" },
 ];
 
 export default function Sidebar() {
@@ -123,13 +137,31 @@ export default function Sidebar() {
         })}
       </nav>
 
+      {/* Quick Actions */}
+      <div className="px-4 py-4 border-t border-sidebar-border space-y-2">
+        <p className="text-xs font-semibold text-muted-foreground px-2">Quick Actions</p>
+        {actionItems.map((item) => (
+          <NavLink
+            key={item.path}
+            to={item.path}
+            className={cn(
+              "flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-medium transition-all duration-300",
+              "bg-sidebar-accent/40 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent"
+            )}
+          >
+            <item.icon className={cn("w-4 h-4", item.color)} />
+            <span>{item.label}</span>
+          </NavLink>
+        ))}
+      </div>
+
       {/* User Info & Logout */}
       <div className="p-4 border-t border-sidebar-border space-y-3">
         <div className="px-4 py-3 rounded-xl bg-sidebar-accent/50">
           <p className="text-sm font-semibold text-foreground">{user?.name}</p>
           <p className="text-xs text-muted-foreground">{user?.email}</p>
           <span className="inline-block mt-2 px-2 py-0.5 text-xs font-medium rounded-full bg-primary/20 text-primary border border-primary/30">
-            {user?.role === "admin" ? "Administrator" : "User"}
+            {user?.role === "admin" ? "Administrator" : "Citizen"}
           </span>
         </div>
         <button

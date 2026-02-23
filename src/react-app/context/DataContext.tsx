@@ -1,12 +1,23 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
-import { Postcode, Complaint } from "@/react-app/types";
+import { createContext, useContext, useState, useEffect, useRef, ReactNode, useCallback } from "react";
+import { Postcode, Complaint, Dustbin, IoTDevicePayload } from "@/react-app/types";
 import postcodesData from "@/react-app/data/postcodes.json";
 import complaintsData from "@/react-app/data/complaints.json";
+import {
+  startDemoMode,
+  stopDemoMode,
+  setLiveMode,
+  subscribeToDeviceUpdates,
+  type IoTMode,
+} from "@/services/iotService";
 
 interface DataContextType {
   postcodes: Postcode[];
   complaints: Complaint[];
+  iotMode: IoTMode;
+  setIotMode: (mode: IoTMode) => void;
   updateDustbinLevel: (postcodePin: string, dustbinId: string, newLevel: number) => void;
+  updateDustbinFromIoT: (payload: IoTDevicePayload) => void;
+  addDustbin: (dustbin: Dustbin) => void;
   addComplaint: (complaint: Omit<Complaint, "id">) => void;
   updateComplaintStatus: (id: number, status: Complaint["status"]) => void;
   markDustbinEmptied: (postcodePin: string, dustbinId: string) => void;
@@ -17,6 +28,9 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 export function DataProvider({ children }: { children: ReactNode }) {
   const [postcodes, setPostcodes] = useState<Postcode[]>([]);
   const [complaints, setComplaints] = useState<Complaint[]>([]);
+  const [iotMode, setIotModeState] = useState<IoTMode>("demo");
+  const postcodesRef = useRef<Postcode[]>([]);
+  postcodesRef.current = postcodes;
 
   useEffect(() => {
     // Load postcodes
@@ -70,6 +84,82 @@ export function DataProvider({ children }: { children: ReactNode }) {
     updateDustbinLevel(postcodePin, dustbinId, 0);
   }, [updateDustbinLevel]);
 
+  const updateDustbinFromIoT = useCallback((payload: IoTDevicePayload) => {
+    setPostcodes((prev) =>
+      prev.map((postcode) =>
+        postcode.dustbins.some((d) => d.id === payload.deviceId)
+          ? {
+              ...postcode,
+              dustbins: postcode.dustbins.map((dustbin) =>
+                dustbin.id === payload.deviceId
+                  ? {
+                      ...dustbin,
+                      fillLevel: Math.min(100, Math.max(0, payload.fillLevel)),
+                      lat: payload.lat,
+                      lng: payload.lng,
+                      battery: payload.battery,
+                      status: payload.status,
+                    }
+                  : dustbin
+              ),
+            }
+          : postcode
+      )
+    );
+  }, []);
+
+  const setIotMode = useCallback((mode: IoTMode) => {
+    setIotModeState(mode);
+  }, []);
+
+  // IoT: subscribe to device updates (demo or live) and merge into postcodes
+  useEffect(() => {
+    if (iotMode === "off") {
+      stopDemoMode();
+      return;
+    }
+    if (iotMode === "demo") {
+      startDemoMode();
+    } else {
+      setLiveMode();
+    }
+    const unsub = subscribeToDeviceUpdates((payload) => {
+      const current = postcodesRef.current;
+      const hasDevice = current.some((p) =>
+        p.dustbins.some((d) => d.id === payload.deviceId)
+      );
+      if (hasDevice) updateDustbinFromIoT(payload);
+    });
+    return () => {
+      unsub();
+      stopDemoMode();
+    };
+  }, [iotMode, updateDustbinFromIoT]);
+
+  const addDustbin = useCallback((dustbin: Dustbin) => {
+    // Find or create postcode entry for locality
+    setPostcodes((prev) => {
+      const localityPostcode = prev.find((p) => p.area === dustbin.locality);
+      
+      if (localityPostcode) {
+        // Add to existing locality
+        return prev.map((p) =>
+          p.area === dustbin.locality
+            ? { ...p, dustbins: [...p.dustbins, dustbin] }
+            : p
+        );
+      } else {
+        // Create new postcode entry for this locality
+        const newPostcode: Postcode = {
+          pin: `PIN_${Date.now()}`,
+          area: dustbin.locality,
+          dustbins: [dustbin],
+        };
+        return [...prev, newPostcode];
+      }
+    });
+  }, []);
+
   const addComplaint = useCallback((complaint: Omit<Complaint, "id">) => {
     const newComplaint: Complaint = {
       ...complaint,
@@ -92,7 +182,11 @@ export function DataProvider({ children }: { children: ReactNode }) {
       value={{
         postcodes,
         complaints,
+        iotMode,
+        setIotMode,
         updateDustbinLevel,
+        updateDustbinFromIoT,
+        addDustbin,
         addComplaint,
         updateComplaintStatus,
         markDustbinEmptied,

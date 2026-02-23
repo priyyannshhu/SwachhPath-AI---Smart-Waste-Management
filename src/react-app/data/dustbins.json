@@ -1,0 +1,79 @@
+{
+  "dustbins": [
+    {
+      "id": "DB_001",
+      "location": "Market Street, Gorakhpur Zone A",
+      "locality": "Gorakhpur Zone A",
+      "lat": 26.1633,
+      "lng": 83.3589,
+      "fillLevel": 65,
+      "battery": 85,
+      "status": "online",
+      "addedByUserId": "user_001",
+      "esp32Enabled": true,
+      "deviceId": "ESP32_001",
+      "wifiSSID": "SwachhPath_Zone_A",
+      "createdAt": "2026-01-15T09:30:00Z"
+    },
+    {
+      "id": "DB_002",
+      "location": "Park Road, Gorakhpur Zone A",
+      "locality": "Gorakhpur Zone A",
+      "lat": 26.1650,
+      "lng": 83.3610,
+      "fillLevel": 45,
+      "battery": 92,
+      "status": "online",
+      "addedByUserId": "user_001",
+      "esp32Enabled": true,
+      "deviceId": "ESP32_002",
+      "wifiSSID": "SwachhPath_Zone_A",
+      "createdAt": "2026-01-20T14:15:00Z"
+    },
+    {
+      "id": "DB_003",
+      "location": "Main Bazaar, Gorakhpur Zone B",
+      "locality": "Gorakhpur Zone B",
+      "lat": 26.1700,
+      "lng": 83.3650,
+      "fillLevel": 88,
+      "battery": 35,
+      "status": "online",
+      "addedByUserId": "user_002",
+      "esp32Enabled": false,
+      "deviceId": null,
+      "wifiSSID": null,
+      "createdAt": "2026-01-25T10:00:00Z"
+    },
+    {
+      "id": "DB_004",
+      "location": "School Street, Gorakhpur Zone B",
+      "locality": "Gorakhpur Zone B",
+      "lat": 26.1720,
+      "lng": 83.3670,
+      "fillLevel": 32,
+      "battery": 78,
+      "status": "offline",
+      "addedByUserId": "user_002",
+      "esp32Enabled": true,
+      "deviceId": "ESP32_003",
+      "wifiSSID": "SwachhPath_Zone_B",
+      "createdAt": "2026-02-01T08:45:00Z"
+    },
+    {
+      "id": "DB_005",
+      "location": "Hospital Road, Gorakhpur Zone A",
+      "locality": "Gorakhpur Zone A",
+      "lat": 26.1680,
+      "lng": 83.3620,
+      "fillLevel": 95,
+      "battery": 15,
+      "status": "online",
+      "addedByUserId": "admin_001",
+      "esp32Enabled": true,
+      "deviceId": "ESP32_004",
+      "wifiSSID": "SwachhPath_Zone_A",
+      "createdAt": "2026-02-05T12:00:00Z"
+    }
+  ]
+}

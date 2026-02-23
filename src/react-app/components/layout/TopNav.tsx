@@ -36,7 +36,10 @@ export default function TopNav() {
   return (
     <header
       ref={headerRef}
-      className="fixed top-0 left-0 lg:left-64 right-0 h-16 bg-background/80 backdrop-blur-xl border-b border-border z-40"
+      className="fixed top-0 left-0 lg:left-64 right-0 h-16 bg-background/95 backdrop-blur-xl border-b border-border/50 z-40"
+      style={{
+        background: "linear-gradient(180deg, hsl(var(--background) / 0.95) 0%, hsl(var(--background) / 0.85) 100%)",
+      }}
     >
       <div className="flex items-center justify-between h-full px-6">
         {/* Search */}

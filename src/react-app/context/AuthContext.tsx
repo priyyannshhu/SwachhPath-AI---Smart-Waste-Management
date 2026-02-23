@@ -1,10 +1,17 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { User } from "@/react-app/types";
-import usersData from "@/react-app/data/users.json";
+import { signup as authSignup, login as authLogin, logout as authLogout } from "@/services/authService";
 
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
+  signup: (userData: {
+    name: string;
+    email: string;
+    password: string;
+    locality: string;
+    phone: string;
+  }) => Promise<{ success: boolean; message: string }>;
   logout: () => void;
   isLoading: boolean;
 }
@@ -19,36 +26,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Check localStorage for existing session
     const storedUser = localStorage.getItem("swachhpath_user");
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch {
+        console.warn("Failed to parse stored user");
+        localStorage.removeItem("swachhpath_user");
+      }
     }
     setIsLoading(false);
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Simulate API call
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const foundUser = usersData.users.find(
-          (u) => u.email === email && u.password === password
-        );
-        if (foundUser) {
-          setUser(foundUser as User);
-          localStorage.setItem("swachhpath_user", JSON.stringify(foundUser));
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      }, 800);
-    });
+    const result = await authLogin(email, password);
+    if (result.success && result.user) {
+      setUser(result.user);
+      return true;
+    }
+    return false;
+  };
+
+  const signup = async (userData: {
+    name: string;
+    email: string;
+    password: string;
+    locality: string;
+    phone: string;
+  }): Promise<{ success: boolean; message: string }> => {
+    const result = await authSignup(userData);
+    if (result.success && result.user) {
+      setUser(result.user);
+    }
+    return {
+      success: result.success,
+      message: result.message,
+    };
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("swachhpath_user");
+    authLogout();
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, signup, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
@@ -61,3 +81,4 @@ export function useAuth() {
   }
   return context;
 }
+
