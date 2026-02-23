@@ -1,15 +1,19 @@
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
 import { Postcode, Complaint } from "@/react-app/types";
+import { IoTDeviceData } from "@/react-app/types/iot";
 import postcodesData from "@/react-app/data/postcodes.json";
 import complaintsData from "@/react-app/data/complaints.json";
+import iotService from "@/react-app/services/iotService";
 
 interface DataContextType {
   postcodes: Postcode[];
   complaints: Complaint[];
+  iotDevices: IoTDeviceData[];
   updateDustbinLevel: (postcodePin: string, dustbinId: string, newLevel: number) => void;
   addComplaint: (complaint: Omit<Complaint, "id">) => void;
   updateComplaintStatus: (id: number, status: Complaint["status"]) => void;
   markDustbinEmptied: (postcodePin: string, dustbinId: string) => void;
+  syncIoTData: () => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -17,6 +21,36 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 export function DataProvider({ children }: { children: ReactNode }) {
   const [postcodes, setPostcodes] = useState<Postcode[]>([]);
   const [complaints, setComplaints] = useState<Complaint[]>([]);
+  const [iotDevices, setIotDevices] = useState<IoTDeviceData[]>([]);
+
+  // Initialize IoT Service and set up subscriptions
+  useEffect(() => {
+    const initializeIoT = async () => {
+      try {
+        await iotService.initialize({ mode: "demo" });
+        console.log("[DataContext] IoT Service initialized");
+
+        // Subscribe to bulk device updates
+        const unsubscribe = iotService.subscribeToBulkUpdates((devices) => {
+          setIotDevices(devices);
+
+          // Automatically sync IoT data to dustbins
+          syncIoTData();
+        });
+
+        return unsubscribe;
+      } catch (error) {
+        console.error("[DataContext] Failed to initialize IoT Service:", error);
+      }
+    };
+
+    initializeIoT();
+
+    // Cleanup on unmount
+    return () => {
+      iotService.stop();
+    };
+  }, []);
 
   useEffect(() => {
     // Load postcodes
@@ -87,15 +121,41 @@ export function DataProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  // Sync IoT data to dustbins in postcodes
+  const syncIoTData = useCallback(() => {
+    setPostcodes((prev) =>
+      prev.map((postcode) => ({
+        ...postcode,
+        dustbins: postcode.dustbins.map((dustbin) => {
+          // Find matching IoT device by ID
+          const iotDevice = iotDevices.find((d) => d.deviceId === dustbin.id);
+          if (iotDevice) {
+            return {
+              ...dustbin,
+              fillLevel: iotDevice.fillLevel,
+              lat: iotDevice.lat,
+              lng: iotDevice.lng,
+              battery: iotDevice.battery,
+              status: iotDevice.status,
+            };
+          }
+          return dustbin;
+        }),
+      }))
+    );
+  }, [iotDevices]);
+
   return (
     <DataContext.Provider
       value={{
         postcodes,
         complaints,
+        iotDevices,
         updateDustbinLevel,
         addComplaint,
         updateComplaintStatus,
         markDustbinEmptied,
+        syncIoTData,
       }}
     >
       {children}

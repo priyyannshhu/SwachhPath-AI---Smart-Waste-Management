@@ -1,0 +1,44 @@
+{
+  "devices": [
+    {
+      "deviceId": "GB01",
+      "lat": 26.7606,
+      "lng": 83.3732,
+      "fillLevel": 45,
+      "battery": 85,
+      "status": "online"
+    },
+    {
+      "deviceId": "GB02",
+      "lat": 26.7615,
+      "lng": 83.3725,
+      "fillLevel": 62,
+      "battery": 78,
+      "status": "online"
+    },
+    {
+      "deviceId": "GB03",
+      "lat": 26.7598,
+      "lng": 83.3740,
+      "fillLevel": 88,
+      "battery": 92,
+      "status": "online"
+    },
+    {
+      "deviceId": "GB04",
+      "lat": 26.7620,
+      "lng": 83.3735,
+      "fillLevel": 35,
+      "battery": 81,
+      "status": "online"
+    },
+    {
+      "deviceId": "GB05",
+      "lat": 26.7610,
+      "lng": 83.3745,
+      "fillLevel": 71,
+      "battery": 88,
+      "status": "online"
+    }
+  ]
+}

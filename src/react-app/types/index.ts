@@ -2,6 +2,10 @@ export interface Dustbin {
   id: string;
   location: string;
   fillLevel: number;
+  lat?: number;
+  lng?: number;
+  battery?: number;
+  status?: "online" | "offline" | "error";
 }
 
 export interface Postcode {
